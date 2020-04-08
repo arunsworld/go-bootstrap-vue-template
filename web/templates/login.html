@@ -1,0 +1,74 @@
+[[define "login"]]
+
+[[template "header"]]
+
+<style>
+    #register-link {
+        line-height: 38px;
+        white-space: nowrap;
+    }
+</style>
+
+</head>
+
+<body>
+
+    <div v-cloak id="login">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">Login</div>
+                        <div class="card-body">
+                            <form name="my-form" action="" method="">
+
+                                <div class="form-group row">
+                                    <label for="username" class="col-md-4 col-form-label text-md-right">Username</label>
+                                    <div class="col-md-6">
+                                        <input type="text" v-model="username" class="form-control" name="username">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
+                                    <div class="col-md-6">
+                                        <input type="password" v-model="password" class="form-control" name="password">
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <div class="col-md-4 offset-md-4">
+                                        <button v-on:click.prevent="login" :disabled="isNotValid" type="submit" class="btn btn-primary">
+                                            Login
+                                        </button>
+                                    </div>
+                                    <div id="register-link" class="col-md-4 text-left">
+                                        <a href="/register">Register here</a>
+                                    </div>
+                                </div>
+
+                                <div v-if="badCredentials" class="row form-group">
+                                    <div class="col-md-8 offset-md-4">
+                                        <div class="alert alert-danger" role="alert">
+                                            Username & Password Incorrect. Please try again.
+                                        </div>
+                                        <div id="resetpassword-link">
+                                            <a href="/password-reset" class="text-info">Reset your password</a>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    [[template "scripts-vue"]]
+    <script src="/static/login.js"></script>
+</body>
+
+</html>
+[[end]]
