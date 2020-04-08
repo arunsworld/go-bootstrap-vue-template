@@ -8,14 +8,14 @@ import (
 )
 
 // EnableHome enables the home page
-func EnableHome(templates []string, ss services.SessionStore) error {
+func EnableHome(srvMux *http.ServeMux, templates []string, ss services.SessionStore) error {
 	tmpl := newHTMLFromTemplateFromMinfiedTemplates(templates, "home")
 
 	type Home struct {
 		NavBar NavBar
 	}
 
-	http.HandleFunc("/", ss.AuthMiddleware(func(w http.ResponseWriter, r *http.Request) {
+	srvMux.HandleFunc("/", ss.AuthMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		u, err := ss.UserID(r)
 		if err != nil {
 			log.Println(err)
@@ -34,7 +34,7 @@ func EnableHome(templates []string, ss services.SessionStore) error {
 		}
 	}))
 
-	http.HandleFunc("/linkB", func(w http.ResponseWriter, r *http.Request) {
+	srvMux.HandleFunc("/linkB", func(w http.ResponseWriter, r *http.Request) {
 		u, err := ss.UserID(r)
 		if err != nil {
 			log.Println(err)

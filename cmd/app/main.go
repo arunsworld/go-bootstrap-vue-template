@@ -25,8 +25,10 @@ func main() {
 		*port = 1000
 	}
 
+	srvMux := &http.ServeMux{}
+
 	staticDir := path.Join(*webDir, "static")
-	endpoints.EnableStatic("/static/", staticDir)
+	endpoints.EnableStatic(srvMux, "/static/", staticDir)
 	if err := endpoints.EnableFaviconIco(staticDir); err != nil {
 		log.Fatal(err)
 	}
@@ -44,19 +46,19 @@ func main() {
 	auth := services.Auth{
 		Store: authStore,
 	}
-	if err := endpoints.EnableLogin(templates, ss, auth); err != nil {
+	if err := endpoints.EnableLogin(srvMux, templates, ss, auth); err != nil {
 		log.Fatal(err)
 	}
-	if err := endpoints.EnableHome(templates, ss); err != nil {
+	if err := endpoints.EnableHome(srvMux, templates, ss); err != nil {
 		log.Fatal(err)
 	}
-	if err := endpoints.EnableRegister(templates, ss, auth); err != nil {
+	if err := endpoints.EnableRegister(srvMux, templates, ss, auth); err != nil {
 		log.Fatal(err)
 	}
 
 	services.ServerStart(services.ServerConfig{
 		Addr: fmt.Sprintf(":%d", *port),
-	})
+	}, srvMux)
 }
 
 func sessionStore() services.SessionStore {

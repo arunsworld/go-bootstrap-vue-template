@@ -9,10 +9,10 @@ import (
 )
 
 // EnableLogin enables the home page
-func EnableLogin(templates []string, ss services.SessionStore, auth services.Auth) error {
+func EnableLogin(srvMux *http.ServeMux, templates []string, ss services.SessionStore, auth services.Auth) error {
 	tmpl := newHTMLFromTemplateFromMinfiedTemplates(templates, "login")
 
-	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
+	srvMux.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
 			if err := tmpl.Execute(w, nil); err != nil {
@@ -23,7 +23,7 @@ func EnableLogin(templates []string, ss services.SessionStore, auth services.Aut
 		}
 	})
 
-	http.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
+	srvMux.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
 		if err := ss.Logout(r, w); err != nil {
 			log.Printf("while processing request %s: %v", r.URL.Path, err)
 			return

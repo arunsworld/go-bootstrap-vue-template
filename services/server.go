@@ -31,10 +31,11 @@ func (config *ServerConfig) updateWithDefaults() {
 }
 
 // ServerStart starts up the server
-func ServerStart(config ServerConfig) {
+func ServerStart(config ServerConfig, srvMux http.Handler) {
 	config.updateWithDefaults()
 	srv := &http.Server{
 		Addr:         config.Addr,
+		Handler:      srvMux,
 		ReadTimeout:  config.ReadTimeout,
 		WriteTimeout: config.WriteTimeout,
 		IdleTimeout:  config.IdleTimeout,

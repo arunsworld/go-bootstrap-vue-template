@@ -10,9 +10,9 @@ import (
 
 // EnableStatic enables serving a static fileserver endpoint
 // typical use: EnableStatic("/static/", "static")
-func EnableStatic(path string, dir string) {
+func EnableStatic(srvMux *http.ServeMux, path string, dir string) {
 	fs := http.FileServer(safeFileSystem{fs: http.Dir(dir)})
-	http.Handle(path, http.StripPrefix(path, fs))
+	srvMux.Handle(path, http.StripPrefix(path, fs))
 }
 
 // safeFileSystem prevents directory listing

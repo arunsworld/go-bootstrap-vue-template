@@ -8,10 +8,10 @@ import (
 )
 
 // EnableRegister enables the registration endpoint
-func EnableRegister(templates []string, ss services.SessionStore, auth services.Auth) error {
+func EnableRegister(srvMux *http.ServeMux, templates []string, ss services.SessionStore, auth services.Auth) error {
 	tmpl := newHTMLFromTemplateFromMinfiedTemplates(templates, "register")
 
-	http.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
+	srvMux.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
 			if err := tmpl.Execute(w, nil); err != nil {
