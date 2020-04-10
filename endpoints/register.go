@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/NYTimes/gziphandler"
 	"github.com/arunsworld/template/services"
 )
 
@@ -11,7 +12,7 @@ import (
 func EnableRegister(srvMux *http.ServeMux, templates []string, ss services.SessionStore, auth services.Auth) error {
 	tmpl := newHTMLFromTemplateFromMinfiedTemplates(templates, "register")
 
-	srvMux.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
+	registerHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
 			if err := tmpl.Execute(w, nil); err != nil {
@@ -21,6 +22,7 @@ func EnableRegister(srvMux *http.ServeMux, templates []string, ss services.Sessi
 			processRegistrationRequest(w, r, ss, auth)
 		}
 	})
+	srvMux.Handle("/register", gziphandler.GzipHandler(registerHandler))
 
 	return nil
 }

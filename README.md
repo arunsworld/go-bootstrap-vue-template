@@ -48,3 +48,10 @@ Getting started
     * That depend on the abstract I/O interface and the domain models
     * To provide the requested service
     * Concrete implementation of the I/O interface should be injected from main
+
+Reference Resources
+===================
+* [Go Templates](https://golang.org/pkg/text/template/). Refer to Actions section for details.
+* [Templates Cheatsheet](https://curtisvermeeren.github.io/2017/09/14/Golang-Templates-Cheatsheet).
+* [Bootstrap](https://getbootstrap.com/docs/4.4/getting-started/introduction/).
+* [vue.js Guide](https://vuejs.org/v2/guide/).

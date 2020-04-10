@@ -1,0 +1,92 @@
+[[[define "login-vuetify"]]]
+
+[[[template "header-vuetify-cdn"]]]
+</head>
+
+<body>
+    <div id="login">
+        <v-app v-cloak>
+            <v-content>
+                <v-container class="fill-height" fluid>
+                    <v-row align="center" justify="center">
+                        <v-col cols="12" sm="8" md="4">
+                            <v-card class="elevation-12">
+                                <v-toolbar flat dark color="primary">
+                                    <v-toolbar-title>Login</v-toolbar-title>
+                                </v-toolbar>
+                                <v-card-text>
+                                    <v-form v-model="valid" @keyup.native.enter="valid && login($event)">
+                                        <v-text-field v-model="username" label="Username" prepend-icon="mdi-account"
+                                            type="text" :rules="usernameRules" autofocus></v-text-field>
+                                        <v-text-field v-model="password" label="Password" prepend-icon="mdi-lock"
+                                            type="password" :rules="pwdRules" counter="8"></v-text-field>
+                                    </v-form>
+                                    <v-alert :value="badCredentials" type="error" transition="scale-transition">
+                                        Username & Password Incorrect.
+                                    </v-alert>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn v-if="badCredentials" color="warning" href="/password-reset">Reset Password
+                                    </v-btn>
+                                    <v-btn color="primary" :disabled="!valid" :loading="processing"
+                                        @click.prevent="login">Login</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-content>
+        </v-app>
+    </div>
+
+    [[[template "scripts-vuetify"]]]
+    [[[template "scripts-jquery"]]]
+    <script>
+        new Vue({
+            el: '#login',
+            vuetify: new Vuetify(),
+            data: {
+                loaded: true,
+                valid: true,
+                username: '',
+                usernameRules: [
+                    v => !!v || 'Username is required',
+                ],
+                password: '',
+                pwdRules: [
+                    v => !!v || 'Password is required',
+                    v => (v && v.length > 7) || 'Password should be at least 8 characters',
+                ],
+                processing: false,
+                badCredentials: false,
+            },
+            methods: {
+                login: function (event) {
+                    this.badCredentials = false;
+                    this.processing = true;
+                    self = this
+                    $.post("/login", { username: this.username, password: this.password })
+                        .done(function (data) {
+                            window.location.href = data.Next;
+                        })
+                        .fail(function (response) {
+                            self.processing = false;
+                            if (response.status == 400) {
+                                alert("looks like we have a bug, server said: " + response.responseText)
+                            } else if (response.status == 403) {
+                                self.badCredentials = true;
+                            }
+                        });
+                }
+            },
+            computed: {},
+            created() {
+                this.$vuetify.theme.dark = false;
+            },
+        })
+    </script>
+</body>
+
+</html>
+[[[end]]]

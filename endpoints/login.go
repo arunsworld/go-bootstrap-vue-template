@@ -5,14 +5,15 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/NYTimes/gziphandler"
 	"github.com/arunsworld/template/services"
 )
 
 // EnableLogin enables the home page
 func EnableLogin(srvMux *http.ServeMux, templates []string, ss services.SessionStore, auth services.Auth) error {
-	tmpl := newHTMLFromTemplateFromMinfiedTemplates(templates, "login")
+	tmpl := newHTMLFromTemplateFromMinfiedTemplates(templates, "login-vuetify")
 
-	srvMux.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
+	loginHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
 			if err := tmpl.Execute(w, nil); err != nil {
@@ -22,6 +23,7 @@ func EnableLogin(srvMux *http.ServeMux, templates []string, ss services.SessionS
 			processLoginRequest(w, r, ss, auth)
 		}
 	})
+	srvMux.Handle("/login", gziphandler.GzipHandler(loginHandler))
 
 	srvMux.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
 		if err := ss.Logout(r, w); err != nil {

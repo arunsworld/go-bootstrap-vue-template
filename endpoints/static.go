@@ -35,7 +35,7 @@ func (sfs safeFileSystem) Open(path string) (http.File, error) {
 }
 
 // EnableFaviconIco serves favicon.ico
-func EnableFaviconIco(staticPath string) error {
+func EnableFaviconIco(srvMux *http.ServeMux, staticPath string) error {
 	f, err := os.Open(path.Join(staticPath, "favicon.ico"))
 	if err != nil {
 		return err
@@ -46,7 +46,7 @@ func EnableFaviconIco(staticPath string) error {
 	if err != nil {
 		return err
 	}
-	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
+	srvMux.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "image/x-icon")
 		_, err := w.Write(content)
 		if err != nil {
@@ -56,4 +56,16 @@ func EnableFaviconIco(staticPath string) error {
 		}
 	})
 	return nil
+}
+
+// EnableRobots enables robots.txt
+func EnableRobots(srvMux *http.ServeMux) {
+	content := []byte(`user-agent: *
+allow: /`)
+	srvMux.HandleFunc("/robots.txt", func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write(content)
+		if err != nil {
+			log.Printf("ERROR: %v", err)
+		}
+	})
 }

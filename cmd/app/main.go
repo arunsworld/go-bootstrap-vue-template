@@ -18,20 +18,18 @@ import (
 
 func main() {
 	webDir := flag.String("web", "web", "directory where web assets are stored")
-	port := flag.Int("port", 0, "port to run server on")
+	port := flag.Int("port", 80, "port to run server on")
 	flag.Parse()
 	validate(*webDir)
-	if *port == 0 {
-		*port = 1000
-	}
 
 	srvMux := &http.ServeMux{}
 
 	staticDir := path.Join(*webDir, "static")
 	endpoints.EnableStatic(srvMux, "/static/", staticDir)
-	if err := endpoints.EnableFaviconIco(staticDir); err != nil {
+	if err := endpoints.EnableFaviconIco(srvMux, staticDir); err != nil {
 		log.Fatal(err)
 	}
+	endpoints.EnableRobots(srvMux)
 
 	ss := sessionStore()
 	templates, err := endpoints.MinifiedTemplates(path.Join(*webDir, "templates"))
@@ -46,13 +44,16 @@ func main() {
 	auth := services.Auth{
 		Store: authStore,
 	}
+	if err := endpoints.EnableRegister(srvMux, templates, ss, auth); err != nil {
+		log.Fatal(err)
+	}
 	if err := endpoints.EnableLogin(srvMux, templates, ss, auth); err != nil {
 		log.Fatal(err)
 	}
-	if err := endpoints.EnableHome(srvMux, templates, ss); err != nil {
+	if err := endpoints.EnableVeutify(srvMux, templates, ss); err != nil {
 		log.Fatal(err)
 	}
-	if err := endpoints.EnableRegister(srvMux, templates, ss, auth); err != nil {
+	if err := endpoints.EnableHome(srvMux, templates, ss); err != nil {
 		log.Fatal(err)
 	}
 

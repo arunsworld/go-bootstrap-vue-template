@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"path"
 	"path/filepath"
@@ -30,7 +31,7 @@ func newHTMLFromTemplate(name string, dir string) (htmlFromTemplate, error) {
 }
 
 func newHTMLFromTemplateFromMinfiedTemplates(templates []string, name string) htmlFromTemplate {
-	tmpl := template.New(name).Delims("[[", "]]")
+	tmpl := template.New(name).Delims("[[[", "]]]")
 	for _, tmplData := range templates {
 		tmpl.Parse(tmplData)
 	}
@@ -60,6 +61,7 @@ func MinifiedTemplates(dir string) ([]string, error) {
 			return nil, err
 		}
 		result = append(result, string(mb))
+		log.Println("read template with:", filename)
 	}
 	return result, nil
 }
@@ -76,13 +78,14 @@ func (tmpl htmlFromTemplate) Execute(w http.ResponseWriter, params interface{}) 
 
 // NavBar defines the parameterized requirements of the navbar
 type NavBar struct {
-	NavItems []NavItem
-	User     string
+	NavItems   []NavItem
+	ActiveItem int
 }
 
 // NavItem are elements within the NavBar
 type NavItem struct {
 	Title    string
 	Link     string
+	Icon     string
 	IsActive bool
 }

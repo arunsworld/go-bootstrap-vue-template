@@ -1,4 +1,4 @@
-[[define "navbar"]]
+[[[define "navbar-bootstrap"]]]
 <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#">Template</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -8,19 +8,16 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            [[range .NavItems]]
-            <li class="nav-item [[if .IsActive]]active[[end]]">
-                <a class="nav-link" href="[[.Link]]">[[.Title]]</a>
+            [[[range .NavBar.NavItems]]]
+            <li class="nav-item [[[if .IsActive]]]active[[[end]]]">
+                <a class="nav-link" href="[[[.Link]]]">[[[.Title]]]</a>
             </li>
-            [[end]]
+            [[[end]]]
         </ul>
         <ul class="navbar-nav navbar-right">
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="/logout">Logout</a>
-            </li> -->
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    [[ .User ]]
+                    [[[ .User ]]]
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="/logout">Logout</a>
@@ -29,4 +26,4 @@
         </ul>
     </div>
 </nav>
-[[end]]
+[[[end]]]

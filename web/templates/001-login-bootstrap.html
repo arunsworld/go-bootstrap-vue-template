@@ -1,6 +1,6 @@
-[[define "login"]]
+[[define "login-bootstrap"]]
 
-[[template "header"]]
+[[[template "header-bootstrap-inline"]]]
 
 <style>
     #register-link {
@@ -67,7 +67,11 @@
     </div>
 
     [[template "scripts-vue"]]
-    <script src="/static/login.js"></script>
+    [[template "scripts-jquery"]]
+    [[template "scripts-bootstrap"]]
+    <script>
+        
+    </script>
 </body>
 
 </html>

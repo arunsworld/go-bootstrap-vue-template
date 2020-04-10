@@ -51,6 +51,7 @@ func ServerStart(config ServerConfig, srvMux http.Handler) {
 	}()
 	log.Printf("starting HTTP server on: %s", config.Addr)
 	srv.ListenAndServe()
+	// srv.ListenAndServeTLS("server.crt", "server.key")
 }
 
 func trapKillSignalForGracefulShutdown() context.Context {
