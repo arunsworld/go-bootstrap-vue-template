@@ -13,10 +13,15 @@ import (
 // EnableLogin enables the home page
 func EnableLogin(srvMux *http.ServeMux, templates []string, ss services.SessionStore, auth services.Auth) error {
 	tmpl := newHTMLFromTemplateFromMinfiedTemplates(templates, fmt.Sprintf("login-%s", Theme))
+	origTheme := Theme
 
 	loginHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
+			if origTheme != Theme {
+				tmpl = newHTMLFromTemplateFromMinfiedTemplates(templates, fmt.Sprintf("login-%s", Theme))
+				origTheme = Theme
+			}
 			if err := tmpl.Execute(w, nil); err != nil {
 				log.Printf("while processing request %s: %v", r.URL.Path, err)
 			}

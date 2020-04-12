@@ -4,15 +4,62 @@
 </head>
 
 <body>
+    <div id="home">
     [[[template "navbar-bootstrap" .]]]
 
     <div class="container">
-        <h2>go-bootstrap-vue template app</h2>
+        <div class="row">
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-header">WebSocket</div>
+                    <div class="card-body">
+                        <h5 class="card-title text-center">{{ counter }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     </div>
 
     [[[template "scripts-vue"]]]
     [[[template "scripts-jquery"]]]
     [[[template "scripts-bootstrap"]]]
+    <script>
+        new Vue({
+            el: '#home',
+            data: {
+                counter: 0,
+            },
+            methods: {
+                switchTheme: function (event) {
+                    console.log("doing switch...")
+                    $.get("/switch")
+                        .done(function () {
+                            window.location.href = "/";
+                        })
+                },
+                wsURL: function () {
+                    var loc = window.location, new_uri;
+                    if (loc.protocol === "https:") {
+                        new_uri = "wss:";
+                    } else {
+                        new_uri = "ws:";
+                    }
+                    new_uri += "//" + loc.host;
+                    new_uri += "/websocket";
+                    return new_uri;
+                },
+            },
+            mounted() {
+                var wu = this.wsURL();
+                var socket = new WebSocket(wu);
+                self = this;
+                socket.onmessage = function(msg){
+                    self.counter = msg.data;
+                };
+            },
+        })
+    </script>
 </body>
 
 </html>

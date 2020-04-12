@@ -49,9 +49,17 @@ Getting started
     * To provide the requested service
     * Concrete implementation of the I/O interface should be injected from main
 
+Deploying
+=========
+* `make`
+* `docker push arunsworld/go-vue-app:latest`
+
 Reference Resources
 ===================
 * [Go Templates](https://golang.org/pkg/text/template/). Refer to Actions section for details.
 * [Templates Cheatsheet](https://curtisvermeeren.github.io/2017/09/14/Golang-Templates-Cheatsheet).
 * [Bootstrap](https://getbootstrap.com/docs/4.4/getting-started/introduction/).
 * [vue.js Guide](https://vuejs.org/v2/guide/).
+* [vuetify icons](https://materialdesignicons.com/cdn/2.0.46/).
+* [vuetify](https://vuetifyjs.com/en/).
+* [vuetify color](https://vuetifyjs.com/en/styles/colors/).
