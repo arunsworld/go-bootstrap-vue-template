@@ -1,6 +1,7 @@
 package endpoints
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -11,7 +12,7 @@ import (
 
 // EnableHome enables the home page
 func EnableHome(srvMux *http.ServeMux, templates []string, ss services.SessionStore) error {
-	tmpl := newHTMLFromTemplateFromMinfiedTemplates(templates, "home-bootstrap")
+	tmpl := newHTMLFromTemplateFromMinfiedTemplates(templates, fmt.Sprintf("home-%s", Theme))
 
 	type Home struct {
 		NavBar NavBar

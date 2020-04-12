@@ -19,8 +19,11 @@ import (
 func main() {
 	webDir := flag.String("web", "web", "directory where web assets are stored")
 	port := flag.Int("port", 80, "port to run server on")
+	theme := flag.String("theme", "vuetify", "theme to use")
 	flag.Parse()
 	validate(*webDir)
+
+	endpoints.Theme = *theme
 
 	srvMux := &http.ServeMux{}
 

@@ -1,4 +1,4 @@
-[[define "login-bootstrap"]]
+[[[define "login-bootstrap"]]]
 
 [[[template "header-bootstrap-inline"]]]
 
@@ -12,33 +12,33 @@
 </head>
 
 <body>
-
-    <div v-cloak id="login">
+    <div id="login">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <div class="card">
-                        <div class="card-header">Login</div>
+                        <div class="card-header bg-primary text-white">Login</div>
                         <div class="card-body">
                             <form name="my-form" action="" method="">
 
                                 <div class="form-group row">
-                                    <label for="username" class="col-md-4 col-form-label text-md-right">Username</label>
-                                    <div class="col-md-6">
-                                        <input type="text" v-model="username" class="form-control" name="username">
+                                    <label for="username" class="col-md-3 col-form-label text-md-right">Username</label>
+                                    <div class="col-md-8">
+                                        <input type="text" v-model="username" class="form-control" name="username" v-focus>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
-                                    <div class="col-md-6">
+                                    <label for="password" class="col-md-3 col-form-label text-md-right">Password</label>
+                                    <div class="col-md-8">
                                         <input type="password" v-model="password" class="form-control" name="password">
                                     </div>
                                 </div>
 
                                 <div class="row form-group">
-                                    <div class="col-md-4 offset-md-4">
-                                        <button v-on:click.prevent="login" :disabled="isNotValid" type="submit" class="btn btn-primary">
+                                    <div class="col-md-5 offset-md-3">
+                                        <button v-on:click.prevent="login" :disabled="isNotValid" type="submit"
+                                            class="btn btn-primary">
                                             Login
                                         </button>
                                     </div>
@@ -47,7 +47,7 @@
                                     </div>
                                 </div>
 
-                                <div v-if="badCredentials" class="row form-group">
+                                <div v-cloak v-if="badCredentials" class="row form-group">
                                     <div class="col-md-8 offset-md-4">
                                         <div class="alert alert-danger" role="alert">
                                             Username & Password Incorrect. Please try again.
@@ -66,13 +66,62 @@
     </div>
     </div>
 
-    [[template "scripts-vue"]]
-    [[template "scripts-jquery"]]
-    [[template "scripts-bootstrap"]]
+    [[[template "scripts-vue"]]]
+    [[[template "scripts-jquery"]]]
+    [[[template "scripts-bootstrap"]]]
     <script>
-        
+        var app = new Vue({
+            el: '#login',
+            data: {
+                username: '',
+                password: '',
+                processing: false,
+                badCredentials: false,
+            },
+            methods: {
+                login: function (event) {
+                    this.badCredentials = false;
+                    this.processing = true;
+                    self = this
+                    $.post("/login", { username: this.username, password: this.password })
+                        .done(function (data) {
+                            window.location.href = data.Next;
+                        })
+                        .fail(function (response) {
+                            self.processing = false;
+                            if (response.status == 400) {
+                                alert("looks like we have a bug, server said: " + response.responseText)
+                            } else if (response.status == 403) {
+                                self.badCredentials = true;
+                            }
+                        });
+                }
+            },
+            computed: {
+                isNotValid: function () {
+                    if (this.processing) {
+                        return true
+                    }
+                    if (this.username == '') {
+                        return true
+                    }
+                    if (this.password == '') {
+                        return true
+                    }
+                }
+            },
+            directives: {
+                focus: {
+                    // When the bound element is inserted into the DOM...
+                    inserted: function (el) {
+                        // Focus the element
+                        el.focus()
+                    }
+                }
+            }
+        })
     </script>
 </body>
 
 </html>
-[[end]]
+[[[end]]]

@@ -13,6 +13,9 @@ import (
 	"github.com/tdewolff/minify/v2/html"
 )
 
+// Theme is either bootstrap of vuetify
+var Theme = "bootstrap"
+
 type htmlFromTemplate struct {
 	t *template.Template
 }

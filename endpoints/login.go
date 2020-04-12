@@ -2,6 +2,7 @@ package endpoints
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -11,7 +12,7 @@ import (
 
 // EnableLogin enables the home page
 func EnableLogin(srvMux *http.ServeMux, templates []string, ss services.SessionStore, auth services.Auth) error {
-	tmpl := newHTMLFromTemplateFromMinfiedTemplates(templates, "login-vuetify")
+	tmpl := newHTMLFromTemplateFromMinfiedTemplates(templates, fmt.Sprintf("login-%s", Theme))
 
 	loginHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
